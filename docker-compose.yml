@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+
+  db:
+    container_name: database
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: example
+#    network_mode: "host"
+    env_file:
+      - ".env"
+
+  adminer:
+    container_name: adminer
+    image: adminer:latest
+    ports:
+      - "8080:8080"
+#    network_mode: "host"
