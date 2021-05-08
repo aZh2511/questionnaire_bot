@@ -3,4 +3,4 @@ Telegram bot which asks users and give them options. All the data is stored in t
 
 ### Admin panel:
 * View users.
-* Manage questions, options and there order.
+* Manage questions, options and their order.
