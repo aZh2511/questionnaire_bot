@@ -22,12 +22,19 @@ def insert_answer(data: list):
     user = types.User.get_current()
     now = datetime.now()
 
+    to_insert = [
+        now.date().isoformat(),  # Time
+        user.full_name,  # Fullname
+        user.username,  # Username
+    ]
+
     for i in range(len(data)):
-        to_insert = [
-            user.full_name,                 # Fullname
-            user.username,                  # Username
-            data[i][0],                     # Question
-            data[i][1],                     # Answer
-            now.date().isoformat()          # Time
-        ]
-        sheet.insert_row(to_insert, 2)
+        # to_insert = [
+        #     user.full_name,                 # Fullname
+        #     user.username,                  # Username
+        #     data[i][0],                     # Question
+        #     data[i][1],                     # Answer
+        #     now.date().isoformat()          # Time
+        # ]
+        to_insert.append(data[i][1])
+    sheet.insert_row(to_insert, 2)

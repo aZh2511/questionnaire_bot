@@ -6,12 +6,16 @@ from loader import dp, bot
 from ..keyboards import kb_start, create_options_kb
 from ..states import Questionnaire
 from sheets import insert_answer
+from aiogram.types import ParseMode
+import asyncio
+
 
 
 @dp.message_handler(commands=['start'], state='*')
 async def starting(message: types.Message):
     await database.add_new_user()
-    text = 'Welcome to ___\nTo get started press the button "Start questionnaire"'
+    text = f"What's up, {message.from_user.full_name}! Let get you set up with the Gold Scalping group! " \
+           f"Please answer the following questions so I can get you access to the group."
     await bot.send_message(message.from_user.id, text, reply_markup=kb_start)
     await Questionnaire.Questions.set()
 
@@ -54,8 +58,11 @@ async def ask_questions(call: types.CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(state=Questionnaire.EndQuestions)
 async def end_questions(call: types.CallbackQuery, state: FSMContext):
     """End of questionnaire. Save the data."""
-    text = 'Thanks!'
-    await call.message.edit_text(text)
+    texts = await database.get_texts()
+    texts = [texts[i][0] for i in range(len(texts))]
+    text = texts[0]
+    await call.message.edit_text(text, parse_mode=ParseMode.HTML)
+
     state_get = await state.get_data()
 
     current_answers = state_get.get('answers')
@@ -67,3 +74,6 @@ async def end_questions(call: types.CallbackQuery, state: FSMContext):
     insert_answer(data)
 
     await state.finish()
+    await asyncio.sleep(3600)
+    text = texts[1]
+    await call.message.answer(text, parse_mode=ParseMode.HTML)

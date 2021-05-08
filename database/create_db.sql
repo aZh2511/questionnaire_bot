@@ -30,3 +30,9 @@ CREATE TABLE IF NOT EXISTS options
    question_id      integer,
    FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS texts
+(
+   message_text      text        not null,
+   id        serial            not null
+);

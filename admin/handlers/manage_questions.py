@@ -23,7 +23,7 @@ async def choose_question(call: types.CallbackQuery):
     await call.message.edit_text(text, reply_markup=keyboard)
 
 
-@dp.callback_query_handler(lambda c: c.data == "create_new", state=Admin.ManageQuestions)
+@dp.callback_query_handler(lambda c: c.data in ["create_new"], state=Admin.ManageQuestions)
 async def manage_questions(call: types.CallbackQuery, state: FSMContext):
     """Ask for an answer text for new answer."""
     text = f'To create new question send me:\n\n' \
@@ -36,13 +36,14 @@ async def manage_questions(call: types.CallbackQuery, state: FSMContext):
     await Admin.CreateNew.set()
 
 
-@dp.callback_query_handler(lambda c: c.data != "back_to_main", state=Admin.ManageQuestions)
+@dp.callback_query_handler(lambda c: c.data not in ["back_to_main"], state=Admin.ManageQuestions)
 async def manage_questions(call: types.CallbackQuery, state: FSMContext):
     """Manage chosen question (change/delete)."""
     text = f'Chosen question: <b>{call.data}</b>\n\nChoose:'
 
     # Save the question.
     await state.update_data(question=call.data)
+    await state.update_data(type='question')
 
     await call.message.edit_text(text, reply_markup=kb_change_delete, parse_mode=ParseMode.HTML)
     await Admin.ChangeDelete.set()

@@ -25,6 +25,8 @@ class DBCommands:
     CHANGE_OPTION = "UPDATE options SET option_text=$1 WHERE option_text=$2"
     DELETE_OPTION = "DELETE FROM options WHERE option_text=$1"
     CHANGE_QUESTION_ORDER = "UPDATE questions SET q_order=$1 WHERE question=$2"
+    GET_TEXTS = "SELECT (message_text, id) FROM texts"
+    CHANGE_TEXT = "UPDATE texts SET message_text=$1 WHERE id=$2"
 
     async def add_new_user(self):
         """Add new user to db."""
@@ -114,6 +116,18 @@ class DBCommands:
         """Change an order of the question."""
         command = self.CHANGE_QUESTION_ORDER
         return await self.pool.fetchval(command, new_order, question)
+
+    async def get_texts(self):
+        """Get message texts from db."""
+        command = self.GET_TEXTS
+        data = await self.pool.fetch(command)
+        data = [data[i][0] for i in range(len(data))]
+        return data
+
+    async def change_text(self, new_text: str, text_id: int):
+        """Set new message_text value ib db."""
+        command = self.CHANGE_TEXT
+        return await self.pool.fetchval(command, new_text, text_id)
 
 
 database = DBCommands()

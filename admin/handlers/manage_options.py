@@ -24,7 +24,7 @@ async def choose_question(call: types.CallbackQuery):
     await call.message.edit_text(text, reply_markup=keyboard)
 
 
-@dp.callback_query_handler(lambda c: c.data != "back_to_main", state=Admin.ManageOptions)
+@dp.callback_query_handler(lambda c: c.data not in ["back_to_main"], state=Admin.ManageOptions)
 async def choose_option(call: types.CallbackQuery, state: FSMContext):
     """Return back to main menu of admin-panel."""
     # Update type of managing and question text value.
@@ -46,7 +46,7 @@ async def choose_option(call: types.CallbackQuery, state: FSMContext):
     await Admin.ChooseOption.set()
 
 
-@dp.callback_query_handler(lambda c: c.data == "back_to_questions", state=Admin.ChooseOption)
+@dp.callback_query_handler(lambda c: c.data in ["back_to_questions"], state=Admin.ChooseOption)
 async def manage_questions(call: types.CallbackQuery,):
     """Send a question choosing for options managing."""
     # Get all the questions and create a keyboard.

@@ -9,3 +9,5 @@ class Admin(StatesGroup):
     ChooseOption = State()
     ManageOptions = State()
     ManageOrder = State()
+    ManageTexts = State()
+    ChangeText = State()

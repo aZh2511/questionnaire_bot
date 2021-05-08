@@ -44,26 +44,6 @@ async def change_delete(call: types.CallbackQuery, state: FSMContext):
         await call.message.edit_text(text, parse_mode=ParseMode.HTML)
         await Admin.ChangeCommand.set()
 
-    elif call.data == 'back':
-        questions = await database.get_questions()
-        questions = [questions[i][0] for i in range(len(questions))]
-
-        if data.get('type') == 'question':
-            text = '-----------   Managing options   -----------\n\nChoose a question to manage its options:'
-            keyboard = create_kb(questions)
-            await Admin.ManageOptions.set()
-            await call.message.edit_text(text, reply_markup=keyboard)
-
-        elif data.get('type') == 'option':
-            await state.update_data(type='option')
-            question_id = await database.get_question_id(data.get('question'))
-            question_id = question_id[0]
-            questions = await database.get_options(question_id)
-            keyboard = create_options_kb(questions)
-            text = f'Chosen question: <b>{data.get("question")}</b>\n\nChoose an option to manage or create a new one.'
-            await call.message.edit_text(text, reply_markup=keyboard, parse_mode=ParseMode.HTML)
-            await Admin.ChooseOption.set()
-
 
 @dp.callback_query_handler(lambda c: c.data == "delete", state=Admin.ChangeDelete)
 async def change_delete(call: types.CallbackQuery, state: FSMContext):
